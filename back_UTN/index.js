@@ -3,7 +3,9 @@ const mysql = require('mysql2');
 const app = express();
 require('dotenv').config();
 const PORT = process.env.PORT || 8080;
+const cors= require('cors')
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,7 +19,7 @@ const conexion = mysql.createConnection({
 });
 
 conexion.connect((err) => {
-    if (err) throw err;
+    // if (err) throw err;
     console.log(`Conexión establecida con la base de datos`);
 });
 
@@ -26,9 +28,12 @@ conexion.connect((err) => {
 app.get('/equipos', (req, res) => {
     let sql = 'SELECT * FROM equipo'
     let query = conexion.query(sql, (err, result) => {
-        if (err) throw err
+        if (err) throw err;
+        res.json(result)
         console.log(result)
     })
+    return query
+    
 })
 
 app.post('/enviar', (req, res) => {
@@ -37,10 +42,10 @@ app.post('/enviar', (req, res) => {
     console.log(`${nombreDelEquipo} - ${ciudad}-${estadio}-${fechaDecreacion}`);
 
     let dato = {
-        nombre_de_equipo : nombreDelEquipo,
+        nombre : nombreDelEquipo,
         ciudad: ciudad ,
         estadio: estadio ,
-        fecha_de_creacion: fechaDecreacion 
+        fecha: fechaDecreacion 
     }
 
     let sql = 'INSERT INTO equipo SET ?'
@@ -49,6 +54,8 @@ app.post('/enviar', (req, res) => {
         if (err) throw err;
         res.send(`Sus datos han sido registrados`)
     });
+
+ 
 });
 
 
@@ -65,6 +72,7 @@ app.put('/actualizar', (req, res) => {
 
         res.send(`Sus datos han sido Actualizados.`);
     })
+  
 });
 
 
@@ -78,6 +86,8 @@ app.delete('/eliminar', (req, res) => {
         res.send(`Sus datos han sido Eliminados.`)
 
     })
+
+    return query
 
 
 })
