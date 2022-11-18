@@ -76,19 +76,21 @@ app.put('/actualizar', (req, res) => {
 });
 
 
-app.delete('/eliminar', (req, res) => {
-    let sql = ' DELETE FROM equipo WHERE idEquipo= ' + req.body.idEquipo + ''
+app.delete('/eliminar/:id', (req, res) => {
 
-    console.log(sql)
+    const { id } = req.params
 
-    let query = conexion.query(sql, (err, result) => {
 
-        res.send(`Sus datos han sido Eliminados.`)
+
+    let query = conexion.query( 'DELETE FROM equipo WHERE idEquipo=?' ,id , (err, result) => {
+        if(err) throw err;
+        res.json({
+            msg: "Date por eliminado lince"
+        })
 
     })
 
-    return query
-
+return query
 
 })
 
