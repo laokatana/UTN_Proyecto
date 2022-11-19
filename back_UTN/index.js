@@ -38,21 +38,23 @@ app.get('/equipos', (req, res) => {
 
 app.post('/enviar', (req, res) => {
 
-    const { nombreDelEquipo, ciudad, estadio, fechaDecreacion } = req.body;
-    console.log(`${nombreDelEquipo} - ${ciudad}-${estadio}-${fechaDecreacion}`);
+    // const { nombreDelEquipo, ciudad, estadio, fechaDecreacion } = req.body;
+    // console.log(`${nombre} - ${ciudad}-${estadio}-${fechaDecreacion}`);
+    const {body} = req
 
-    let dato = {
-        nombre : nombreDelEquipo,
-        ciudad: ciudad ,
-        estadio: estadio ,
-        fecha: fechaDecreacion 
-    }
+    // let dato = {
+    //     nombre : nombreDelEquipo,
+    //     ciudad: ciudad ,
+    //     estadio: estadio ,
+    //     fecha: fechaDecreacion 
+    // }
 
     let sql = 'INSERT INTO equipo SET ?'
 
-    let query = conexion.query(sql, dato, (err, result) => {
+    let query = conexion.query('INSERT INTO equipo SET ?', [body], (err, result) => {
         if (err) throw err;
-        res.send(`Sus datos han sido registrados`)
+        res.json({msg: "ha nacido un nuevo club"})
+        // res.send(`Sus datos han sido registrados`)
     });
 
  
